@@ -11,57 +11,32 @@ import (
 //Функция преобразует строку римского числа в целое.
 //Она не учитывает некоторые особенности римских чисел, и не является на 100% правильной!!!
 func rom_num_to_int(rom_num string) int {
-	result := 0
-    var prev_value byte
+	romans := []byte{'I', 'V', 'X', 'L', 'C', 'D', 'M'}
+	values := []int{1, 5, 10, 50, 100, 500, 1000}
 
-	for i := 0; i < len(rom_num); i++ {
-		value := rom_num[i]
-		switch value {
-		case 'I':
-			result += 1
-		case 'V':
-			if prev_value == 'I' {
-				result += 3 // 5 - 1 = 4
-			} else {
-				result += 5
-			}
-		case 'X':
-			if prev_value == 'I' {
-				result += 8 // 10 - 1 = 9
-			} else {
-				result += 10
-			}
-		case 'L':
-			if prev_value == 'X' {
-				result += 30 // 50 - 10 = 40
-			} else {
-				result += 50
-			}
-		case 'C':
-			if prev_value == 'X' {
-				result += 80 // 100 - 10 = 90
-			} else {
-				result += 100
-			}
-		case 'D':
-			if prev_value == 'C' {
-				result += 300 // 500 - 100 = 400
-			} else {
-				result += 500
-			}
-		case 'M':
-			if prev_value == 'C' {
-				result += 800 // 1000 - 100 = 900
-			} else {
-				result += 1000
+	result := 0
+	prev_value := 0
+
+	for i := len(rom_num) - 1; i >= 0; i-- {
+		value := 0
+		for index, roman := range romans {
+			if rom_num[i] == roman {
+				value = values[index]
+				break
 			}
 		}
 
+		if value < prev_value {
+			result -= value
+		} else {
+			result += value
+		}
 		prev_value = value
 	}
-    if int_to_rom_num(result) != rom_num{
+	if int_to_rom_num(result) != rom_num{
         panic("Введено некорректное римское число!");
     }
+
 	return result
 }
 
